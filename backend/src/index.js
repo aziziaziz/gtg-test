@@ -1,10 +1,13 @@
 import express from 'express';
 import axios from 'axios';
+import cors from 'cors';
 
 import mongoConn from '../modules/mongo.js';
 const currenciesdb = new mongoConn('g2gdb', 'currencies');
 
 const app = express();
+
+app.use(cors({ origin: 'http://localhost:8080' }));
 
 app.get('/', (req, res) => {
   res.send('NodeJS is running');
