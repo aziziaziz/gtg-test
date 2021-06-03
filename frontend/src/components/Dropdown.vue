@@ -1,6 +1,7 @@
 <template>
   <div class="dropdown-main">
-    <div class="selected-box" @focus="dropdownFocus" @blur="dropdownBlur" tabindex="0" ref="box" @keydown="search">
+    <div class="selected-box" @focus="dropdownFocus" @blur="dropdownBlur" tabindex="0" ref="box" @keydown="search"
+      :style="{ borderRadius: focus ? '10px 10px 0 0' : '10px' }">
       <div class="d-key">{{ selected ? selected[itemKey] : '' }}</div>
       <div class="d-desc">{{ selected ? selected[itemDesc] : '' }}</div>
     </div>
@@ -35,6 +36,8 @@ export default {
     items: { type: Array, default: function() { return [] } },
     itemKey: { type: String, default: '' },
     itemDesc: { type: String, default: '' },
+
+    selectedItem: { type: Object, default: null },
   },
   methods: {
     itemClicked: function(item, el) {
@@ -42,6 +45,7 @@ export default {
       this.focus = false;
       this.tempEl = el.target.parentNode;
       this.tempEl.classList.add('d-selected');
+      this.$emit('update:selectedItem', this.selected);
     },
     dropdownFocus: function() {
       this.focus = true;
@@ -66,6 +70,7 @@ export default {
         this.selected = this.tempSelected;
         this.tempSelected = null;
         this.$refs.box.blur();
+        this.$emit('update:selectedItem', this.selected);
       } else {
         if (this.timer) {
           clearInterval(this.timer);
@@ -129,6 +134,9 @@ export default {
 
         itemList.appendChild(item);
       })
+    },
+    selectedItem: function(val) {
+      this.selected = val;
     }
   }
 }
@@ -140,13 +148,14 @@ export default {
   width: 100%;
 
   > .selected-box {
-    border: 1px solid rgb(128,128,128);
+    // border: 1px solid rgb(128,128,128);
     min-height: 50px;
     max-height: 50px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     padding-left: 10px;
+    background-color: white;
   }
 
   > .item-list {
@@ -155,6 +164,9 @@ export default {
     position: absolute;
     left: 0;
     top: 100%;
+    border-top: 1px solid rgb(128,128,128);
+    border-bottom: 1px solid rgb(128,128,128);
+    z-index: 99999;
   }
 }
 </style>
@@ -162,10 +174,11 @@ export default {
 <style>
 .d-item {
   border-color: rgb(128,128,128);
-  border-width: 0 1px 1px 1px;
+  border-width: 0px 1px 1px 1px;
   border-style: solid;
   padding: 5px;
   cursor: pointer;
+  background-color: white;
 }
 
 .d-item:hover, .d-selected {
