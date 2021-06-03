@@ -79,7 +79,7 @@ export default {
           this.currentSearch = '';
           this.currentIndex = null;
           clearInterval(this.timer);
-        }, 300);
+        }, 500);
 
         this.currentSearch += e.key;
         var search = this.items.filter(i => i[this.itemDesc].toLowerCase().startsWith(this.currentSearch.toLowerCase()));
